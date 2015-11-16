@@ -1,0 +1,11 @@
+{
+    "name": "timer",
+    "description": "A simple timer.",
+    "copyright": "Copyright © 2015, Michael Fadely",
+    "authors": [ "Michael Fadely" ],
+    "targetType": "library",
+    "sourcePaths": [ "timer" ],
+    "importPaths": [ "timer" ],
+    "dependencies": {
+    }
+}
