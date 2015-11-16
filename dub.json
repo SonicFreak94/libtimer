@@ -4,8 +4,9 @@
     "copyright": "Copyright © 2015, Michael Fadely",
     "authors": [ "Michael Fadely" ],
     "targetType": "library",
+	"targetPath": "lib",
     "sourcePaths": [ "timer" ],
     "importPaths": [ "timer" ],
     "dependencies": {
-    }
+    }	
 }
