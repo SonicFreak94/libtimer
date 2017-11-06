@@ -1,54 +1,78 @@
 module timer;
 
-public import std.datetime;
+public import std.datetime.stopwatch;
 
-// TODO: Remove TickDuration as it will be deprecated.
+// Everything in here is @safe and @nogc!
+@safe @nogc:
+
 // TODO: Implement AsyncTimer (threaded, callbacks, etc)
 
+/// Convenient wrapper for `std.datetime.stopwatch.StopWatch`
+/// See_Also: std.datetime.stopwatch.StopWatch
 class Timer
 {
 private:
 	StopWatch stopwatch;
 
 public:
+	/// Desired duration for this timer.
+	Duration duration;
+
+	/**
+		Constructs a new `Timer`.
+
+		Params:
+			duration = The desired duration for this timer.
+			autostart = Indicates whether this instance should start running immediately.
+	*/
 	this(in Duration duration, AutoStart autostart)
 	{
-		this.duration = cast(TickDuration)duration;
+		this.duration = duration;
 		stopwatch = StopWatch(autostart);
 	}
 
-	TickDuration duration;
-
-	@safe void reset()
+	/// Resets the internal `StopWatch`.
+	/// See_Also: std.datetime.stopwatch.StopWatch.reset
+	void reset()
 	{
 		stopwatch.reset();
 	}
-	@safe void start()
+
+	/// Starts the internal `StopWatch`.
+	/// See_Also: std.datetime.stopwatch.StopWatch.start
+	void start()
 	{
 		stopwatch.start();
 	}
-	@safe void stop()
+
+	/// Stops the internal `StopWatch`.
+	/// See_Also: std.datetime.stopwatch.StopWatch.stop
+	void stop()
 	{
 		stopwatch.stop();
 	}
-	const @safe TickDuration peek()
+
+	/// Peek at the amount of time the internal `StopWatch` has been running.
+	/// See_Also: std.datetime.stopwatch.StopWatch.peek
+	Duration peek() const
 	{
 		return stopwatch.peek();
 	}
-	@safe void setMeasured(TickDuration d)
+
+	/// Returns whether the internal `StopWatch` is running.
+	/// See_Also: std.datetime.stopwatch.StopWatch.running
+	pure nothrow bool running() @property const
 	{
-		stopwatch.setMeasured(d);
-	}
-	const pure nothrow @property @safe bool running()
-	{
-		return stopwatch.running();
+		return stopwatch.running;
 	}
 
-	// Returns true if the elapsed time has exceeded the desired duration.
+	/// Indicates whether the elapsed time has reached or exceeded the desired duration.
 	bool done() @property
 	{
 		if (!running)
+		{
 			return true;
+		}
 
 		if (peek() >= duration)
 		{
@@ -58,8 +82,10 @@ public:
 
 		return false;
 	}
-	// Remaining time
-	auto remainder() @property
+
+	/// Gets the time remaining until the timer is done.
+	/// See_Also: done
+	auto remainder() @property const
 	{
 		return duration - peek();
 	}
